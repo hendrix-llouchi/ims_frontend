@@ -29,10 +29,14 @@ export default function LoginPage() {
       const payload: LoginRequest = { username, password };
       const response = await axiosInstance.post<LoginResponse>('/api/auth/login', payload);
       
-      const { role } = response.data;
-      login(role);
-      
-      navigate(`/${role}/dashboard`);
+      const { role, username, is_temporary_password } = response.data;
+      login(role, username, is_temporary_password);
+
+      if (is_temporary_password) {
+        navigate('/change-password', { replace: true });
+      } else {
+        navigate(`/${role}/dashboard`);
+      }
     } catch (error) {
       if (error instanceof AxiosError) {
         if (!error.response) {

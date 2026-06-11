@@ -4,7 +4,7 @@ import type { UserRole } from '../context/AuthContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole: UserRole;
+  requiredRole?: UserRole;
 }
 
 export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
@@ -18,7 +18,7 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
     return <Navigate to="/login" replace />;
   }
 
-  if (user.role !== requiredRole) {
+  if (requiredRole && user.role !== requiredRole) {
     return <Navigate to="/login" replace />;
   }
 
