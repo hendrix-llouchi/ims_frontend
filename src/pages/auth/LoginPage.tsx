@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
@@ -11,8 +11,21 @@ export default function LoginPage() {
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
+
+  // Navigate only AFTER React has committed the user state to context.
+  // Calling navigate() immediately after login() (setUser) causes ProtectedRoute
+  // to render before the state update is committed — seeing user=null and looping back.
+  useEffect(() => {
+    if (user) {
+      if (user.is_temporary_password) {
+        navigate('/change-password', { replace: true });
+      } else {
+        navigate(`/${user.role}/dashboard`, { replace: true });
+      }
+    }
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,16 +42,12 @@ export default function LoginPage() {
       const payload: LoginRequest = { username, password };
       const response = await axiosInstance.post<LoginResponse>('/api/auth/login', payload);
       
-      const { role, username, is_temporary_password } = response.data;
+      const { role, is_temporary_password } = response.data;
       login(role, username, is_temporary_password);
-
-      if (is_temporary_password) {
-        navigate('/change-password', { replace: true });
-      } else {
-        navigate(`/${role}/dashboard`);
-      }
+      // Navigation is handled by the useEffect watching `user`
     } catch (error) {
       if (error instanceof AxiosError) {
+        console.error('Login error:', error.response?.status, error.response?.data);
         if (!error.response) {
           setErrorMsg('Check your connection and try again.');
         } else {
@@ -49,17 +58,24 @@ export default function LoginPage() {
             case 403:
               setErrorMsg('Your account has been deactivated. Contact your administrator.');
               break;
+            case 422:
+              setErrorMsg('Invalid input. Please check your username and password.');
+              break;
             case 423:
               setErrorMsg('Account temporarily locked. Try again in 15 minutes.');
               break;
+            case 429:
+              setErrorMsg('Too many login attempts. Please wait before trying again.');
+              break;
             case 500:
-              setErrorMsg('Something went wrong. Please try again.');
+              setErrorMsg('Server error. Please try again later.');
               break;
             default:
-              setErrorMsg('Something went wrong. Please try again.');
+              setErrorMsg(`Something went wrong (${error.response.status}). Please try again.`);
           }
         }
       } else {
+        console.error('Unexpected login error:', error);
         setErrorMsg('Something went wrong. Please try again.');
       }
     } finally {
