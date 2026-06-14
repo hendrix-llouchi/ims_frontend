@@ -2,7 +2,7 @@ export type UserRole = 'owner' | 'manager' | 'worker';
 
 export interface LoginRequest {
   username: string;
-  password?: string;
+  password: string;
 }
 
 export interface ForgotPasswordRequest {

@@ -17,26 +17,50 @@ interface AuthContextType {
   clearTemporaryPasswordFlag: () => void;
 }
 
+const AUTH_STORAGE_KEY = 'ims_auth_user';
+
+function loadUser(): AuthUser | null {
+  try {
+    const stored = localStorage.getItem(AUTH_STORAGE_KEY);
+    return stored ? (JSON.parse(stored) as AuthUser) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveUser(user: AuthUser | null): void {
+  if (user) {
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
+  } else {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+  }
+}
+
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // Initialize from localStorage — survives StrictMode double-mounts and page refreshes
+  const [user, setUser] = useState<AuthUser | null>(loadUser);
+  const [isLoading] = useState<boolean>(false);
 
   const login = (role: UserRole, username: string, isTemporaryPassword: boolean) => {
-    setIsLoading(true);
-    setUser({ role, username, is_temporary_password: isTemporaryPassword });
-    setIsLoading(false);
+    const newUser: AuthUser = { role, username, is_temporary_password: isTemporaryPassword };
+    saveUser(newUser);
+    setUser(newUser);
   };
 
   const logout = () => {
+    saveUser(null);
     setUser(null);
   };
 
   const clearTemporaryPasswordFlag = () => {
-    setUser((prev) =>
-      prev ? { ...prev, is_temporary_password: false } : prev
-    );
+    setUser((prev) => {
+      if (!prev) return prev;
+      const updated = { ...prev, is_temporary_password: false };
+      saveUser(updated);
+      return updated;
+    });
   };
 
   return (
