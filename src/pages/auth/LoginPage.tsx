@@ -44,9 +44,29 @@ export default function LoginPage() {
       const payload: LoginRequest = { username, password };
       const response = await axiosInstance.post<LoginResponse>('/api/auth/login', payload);
       
-      const { role, is_temporary_password } = response.data;
+      const {
+        id,
+        role,
+        username: responseUsername,
+        is_temporary_password,
+        name,
+        email,
+        phone_number,
+        location,
+        emergency_contact,
+      } = response.data;
       justLoggedIn.current = true;
-      login(role, username, is_temporary_password);
+      login({
+        id,
+        role,
+        username: responseUsername,
+        is_temporary_password,
+        name,
+        email,
+        phone_number,
+        location,
+        emergency_contact,
+      });
       // Navigation is handled by the useEffect watching `user`
     } catch (error) {
       if (error instanceof AxiosError) {
