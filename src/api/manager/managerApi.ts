@@ -6,6 +6,7 @@ import type {
   ManagerWorker,
   PurchaseOrder,
   WorkerProductWarehouse,
+  ManagerFlag,
 } from '../../types/workerApi';
 
 // ── Orders ────────────────────────────────────────────────────────────────────
@@ -104,6 +105,17 @@ export async function flagWorker(
   const res = await axiosInstance.post<{ message: string; flag: any }>(
     '/api/manager/flags',
     { worker_id: workerId, reason },
+  );
+  return res.data;
+}
+
+/** GET /api/manager/flags — paginated list of all flags raised by this manager */
+export async function fetchManagerFlags(
+  page = 1,
+): Promise<Paginated<ManagerFlag>> {
+  const res = await axiosInstance.get<Paginated<ManagerFlag>>(
+    '/api/manager/flags',
+    { params: { page } },
   );
   return res.data;
 }

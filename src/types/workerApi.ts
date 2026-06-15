@@ -112,3 +112,24 @@ export interface PurchaseOrder {
   updated_at: string;
 }
 
+// ── Worker Flag types ─────────────────────────────────────────────────────────
+export type WorkerFlagStatus = 'pending' | 'dismissed' | 'warning_issued';
+
+export interface ManagerFlag {
+  id: number;
+  manager_id: number;
+  worker_id: number;
+  reason: string;
+  status: WorkerFlagStatus;
+  reviewed_at: string | null;
+  created_at: string;
+  updated_at: string;
+  worker: {
+    id: number;
+    name: string;
+  };
+  manager: {
+    id: number;
+    name: string;
+  };
+}
