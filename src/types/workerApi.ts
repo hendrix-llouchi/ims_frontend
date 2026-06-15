@@ -77,3 +77,38 @@ export interface ManagerWorker {
   is_active: boolean;
 }
 
+// ── Purchase Order types ──────────────────────────────────────────────────────
+export type PurchaseOrderStatus = 'pending' | 'complete' | 'incomplete';
+
+export interface PurchaseOrderItem {
+  id: number;
+  purchase_order_id: number;
+  product_id: number;
+  quantity_ordered: number;
+  quantity_received: number | null;
+  product?: {
+    id: number;
+    name: string;
+    unit?: string;
+  } | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PurchaseOrder {
+  id: number;
+  manager_id: number;
+  warehouse_id: number;
+  supplier_name: string;
+  expected_delivery_date: string;
+  actual_arrival_date: string | null;
+  status: PurchaseOrderStatus;
+  warehouse?: {
+    id: number;
+    name: string;
+  } | null;
+  items: PurchaseOrderItem[];
+  created_at: string;
+  updated_at: string;
+}
+

@@ -52,6 +52,7 @@ export default function WorkersPage() {
   const [flagReason, setFlagReason] = useState('');
   const [isSubmittingFlag, setIsSubmittingFlag] = useState(false);
   const [flagError, setFlagError] = useState<string | null>(null);
+  const [recentlyFlaggedIds, setRecentlyFlaggedIds] = useState<number[]>([]);
 
   // Fetch profiles and availability status
   const loadWorkersData = useCallback(
@@ -114,7 +115,8 @@ export default function WorkersPage() {
     setFlagError(null);
 
     try {
-      await flagWorker(flaggingWorker.id, trimmedReason);
+      const flaggedId = flaggingWorker.id;
+      await flagWorker(flaggedId, trimmedReason);
       addNotification({
         id: Math.random().toString(36).substring(7),
         message: `${flaggingWorker.name} has been successfully flagged.`,
@@ -123,6 +125,13 @@ export default function WorkersPage() {
       });
       setFlaggingWorker(null);
       setFlagReason('');
+      
+      // Update recently flagged state for visual button feedback
+      setRecentlyFlaggedIds((prev) => [...prev, flaggedId]);
+      setTimeout(() => {
+        setRecentlyFlaggedIds((prev) => prev.filter((id) => id !== flaggedId));
+      }, 3000);
+
       loadWorkersData(page);
     } catch (err: unknown) {
       const axiosError = err as { response?: { data?: { message?: string } } };
@@ -274,10 +283,15 @@ export default function WorkersPage() {
                         {/* Flag Worker button */}
                         <td className="px-6 py-4 text-right">
                           <button
+                            disabled={recentlyFlaggedIds.includes(worker.id)}
                             onClick={() => setFlaggingWorker(worker)}
-                            className="inline-flex items-center gap-1 rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:border-red-200 hover:text-red-600 hover:bg-red-50/20 transition-all cursor-pointer"
+                            className={`inline-flex items-center gap-1 rounded-xl border px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
+                              recentlyFlaggedIds.includes(worker.id)
+                                ? 'border-green-200 bg-green-50 text-green-700 cursor-not-allowed'
+                                : 'border-gray-200 bg-white text-gray-700 hover:border-red-200 hover:text-red-600 hover:bg-red-50/20'
+                            }`}
                           >
-                            🚩 Flag Worker
+                            {recentlyFlaggedIds.includes(worker.id) ? 'Flagged ✓' : '🚩 Flag Worker'}
                           </button>
                         </td>
                       </tr>
