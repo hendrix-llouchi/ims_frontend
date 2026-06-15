@@ -3,6 +3,7 @@ import type {
   Paginated,
   WorkerOrder,
   WorkerProduct,
+  ManagerWorker,
 } from '../../types/workerApi';
 
 // ── Orders ────────────────────────────────────────────────────────────────────
@@ -78,6 +79,29 @@ export interface WorkerStatus {
 export async function fetchWorkersStatus(): Promise<{ workers: WorkerStatus[] }> {
   const res = await axiosInstance.get<{ workers: WorkerStatus[] }>(
     '/api/manager/workers/status',
+  );
+  return res.data;
+}
+
+/** GET /api/manager/users — paginated list of all workers */
+export async function fetchManagerWorkers(
+  page = 1,
+): Promise<Paginated<ManagerWorker>> {
+  const res = await axiosInstance.get<Paginated<ManagerWorker>>(
+    '/api/manager/users',
+    { params: { page } },
+  );
+  return res.data;
+}
+
+/** POST /api/manager/flags — flag a worker */
+export async function flagWorker(
+  workerId: number,
+  reason: string,
+): Promise<{ message: string; flag: any }> {
+  const res = await axiosInstance.post<{ message: string; flag: any }>(
+    '/api/manager/flags',
+    { worker_id: workerId, reason },
   );
   return res.data;
 }

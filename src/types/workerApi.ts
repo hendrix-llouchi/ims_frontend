@@ -64,3 +64,16 @@ export interface WorkerProduct {
   created_at: string;
   updated_at: string;
 }
+
+// ── Manager worker types ──────────────────────────────────────────────────────
+export interface ManagerWorker {
+  id: number;
+  name: string;
+  age: number | null;
+  phone_number: string | null;
+  location: string | null;
+  email: string;
+  username: string;
+  is_active: boolean;
+}
+
