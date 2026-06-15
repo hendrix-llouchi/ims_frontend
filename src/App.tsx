@@ -8,7 +8,13 @@ import WorkerDashboard from './pages/worker/WorkerDashboard';
 import AllOrdersPage from './pages/worker/AllOrdersPage';
 import StockPage from './pages/worker/StockPage';
 import ProfilePage from './pages/worker/ProfilePage';
+import ManagerLayout from './pages/manager/ManagerLayout';
 import ManagerDashboard from './pages/manager/ManagerDashboard';
+import OrdersPage from './pages/manager/OrdersPage';
+import WorkersPage from './pages/manager/WorkersPage';
+import ManagerStockPage from './pages/manager/StockPage';
+import PurchaseOrdersPage from './pages/manager/PurchaseOrdersPage';
+import FlagsPage from './pages/manager/FlagsPage';
 import OwnerDashboard from './pages/owner/OwnerDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Toast from './components/Toast';
@@ -57,15 +63,23 @@ export default function App() {
           <Route path="dashboard" element={<Navigate to="/worker/my-orders" replace />} />
         </Route>
 
-        {/* Protected — Manager */}
+        {/* ── Manager nested layout ───────────────────────────────────────────── */}
         <Route
-          path="/manager/dashboard"
+          path="/manager"
           element={
             <ProtectedRoute requiredRole="manager">
-              <ManagerDashboard />
+              <ManagerLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<Navigate to="/manager/orders" replace />} />
+          <Route path="dashboard" element={<ManagerDashboard />} />
+          <Route path="orders" element={<OrdersPage />} />
+          <Route path="workers" element={<WorkersPage />} />
+          <Route path="stock" element={<ManagerStockPage />} />
+          <Route path="purchase-orders" element={<PurchaseOrdersPage />} />
+          <Route path="flags" element={<FlagsPage />} />
+        </Route>
 
         {/* Protected — Owner */}
         <Route
