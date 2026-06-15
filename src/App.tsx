@@ -3,14 +3,20 @@ import LoginPage from './pages/auth/LoginPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import ChangePasswordPage from './pages/auth/ChangePasswordPage';
+import WorkerLayout from './pages/worker/WorkerLayout';
 import WorkerDashboard from './pages/worker/WorkerDashboard';
+import AllOrdersPage from './pages/worker/AllOrdersPage';
+import StockPage from './pages/worker/StockPage';
+import ProfilePage from './pages/worker/ProfilePage';
 import ManagerDashboard from './pages/manager/ManagerDashboard';
 import OwnerDashboard from './pages/owner/OwnerDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import Toast from './components/Toast';
 
 export default function App() {
   return (
     <BrowserRouter>
+      <Toast />
       <Routes>
         {/* Public */}
         <Route path="/login" element={<LoginPage />} />
@@ -27,15 +33,29 @@ export default function App() {
           }
         />
 
-        {/* Protected — Worker */}
+        {/* ── Worker nested layout ──────────────────────────────────────────────
+            WorkerLayout IS the route element so React Router's <Outlet /> context
+            is set up correctly. The ProtectedRoute guard sits one level above each
+            page route so the layout can render without breaking the outlet chain. */}
         <Route
-          path="/worker/dashboard"
+          path="/worker"
           element={
             <ProtectedRoute requiredRole="worker">
-              <WorkerDashboard />
+              <WorkerLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          {/* /worker  →  /worker/my-orders (absolute to avoid relative-path glitches) */}
+          <Route index element={<Navigate to="/worker/my-orders" replace />} />
+
+          <Route path="my-orders"  element={<WorkerDashboard />} />
+          <Route path="all-orders" element={<AllOrdersPage />} />
+          <Route path="stock"      element={<StockPage />} />
+          <Route path="profile"    element={<ProfilePage />} />
+
+          {/* Legacy: /worker/dashboard (login redirects here) → /worker/my-orders */}
+          <Route path="dashboard" element={<Navigate to="/worker/my-orders" replace />} />
+        </Route>
 
         {/* Protected — Manager */}
         <Route

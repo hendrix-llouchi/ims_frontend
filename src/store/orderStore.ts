@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { Order } from '../types/order';
+import type { WorkerOrder } from '../types/workerApi';
 
 interface OrderState {
-  orders: Order[];
+  orders: WorkerOrder[];
   isLoading: boolean;
   error: string | null;
 
-  setOrders: (orders: Order[]) => void;
-  updateOrder: (id: number, updates: Partial<Order>) => void;
+  setOrders: (orders: WorkerOrder[]) => void;
+  updateOrder: (id: number, updates: Partial<WorkerOrder>) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 }
@@ -45,3 +45,4 @@ export const useOrderStore = create<OrderState>()(
     { name: 'OrderStore' }
   )
 );
+

@@ -3,16 +3,22 @@ import type { ReactNode } from 'react';
 import type { UserRole } from '../types/auth';
 export type { UserRole };
 
-interface AuthUser {
+export interface AuthUser {
+  id: number;
   role: UserRole;
   username: string;
   is_temporary_password: boolean;
+  name: string | null;
+  email: string | null;
+  phone_number: string | null;
+  location: string | null;
+  emergency_contact: string | null;
 }
 
 interface AuthContextType {
   user: AuthUser | null;
   isLoading: boolean;
-  login: (role: UserRole, username: string, isTemporaryPassword: boolean) => void;
+  login: (userData: AuthUser) => void;
   logout: () => void;
   clearTemporaryPasswordFlag: () => void;
 }
@@ -43,10 +49,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(loadUser);
   const [isLoading] = useState<boolean>(false);
 
-  const login = (role: UserRole, username: string, isTemporaryPassword: boolean) => {
-    const newUser: AuthUser = { role, username, is_temporary_password: isTemporaryPassword };
-    saveUser(newUser);
-    setUser(newUser);
+  const login = (userData: AuthUser) => {
+    saveUser(userData);
+    setUser(userData);
   };
 
   const logout = () => {

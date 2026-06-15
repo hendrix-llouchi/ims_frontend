@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
@@ -10,22 +10,24 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   
   const { login, user } = useAuth();
   const navigate = useNavigate();
+  // Track whether a login was just performed so the effect skips the initial mount.
+  const justLoggedIn = useRef(false);
 
-  // Navigate only AFTER React has committed the user state to context.
-  // Calling navigate() immediately after login() (setUser) causes ProtectedRoute
-  // to render before the state update is committed — seeing user=null and looping back.
   useEffect(() => {
+    if (!justLoggedIn.current) return; // Ignore stale localStorage user on mount
     if (user) {
+      justLoggedIn.current = false;
       if (user.is_temporary_password) {
         navigate('/change-password', { replace: true });
       } else {
         navigate(`/${user.role}/dashboard`, { replace: true });
       }
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,14 +44,35 @@ export default function LoginPage() {
       const payload: LoginRequest = { username, password };
       const response = await axiosInstance.post<LoginResponse>('/api/auth/login', payload);
       
-      const { role, is_temporary_password } = response.data;
-      login(role, username, is_temporary_password);
+      const {
+        id,
+        role,
+        username: responseUsername,
+        is_temporary_password,
+        name,
+        email,
+        phone_number,
+        location,
+        emergency_contact,
+      } = response.data;
+      justLoggedIn.current = true;
+      login({
+        id,
+        role,
+        username: responseUsername,
+        is_temporary_password,
+        name,
+        email,
+        phone_number,
+        location,
+        emergency_contact,
+      });
       // Navigation is handled by the useEffect watching `user`
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.error('Login error:', error.response?.status, error.response?.data);
+        console.error('Login error — status:', error.response?.status, 'data:', error.response?.data, 'msg:', error.message);
         if (!error.response) {
-          setErrorMsg('Check your connection and try again.');
+          setErrorMsg(`Network error: ${error.message}`);
         } else {
           switch (error.response.status) {
             case 401:
@@ -58,25 +81,19 @@ export default function LoginPage() {
             case 403:
               setErrorMsg('Your account has been deactivated. Contact your administrator.');
               break;
-            case 422:
-              setErrorMsg('Invalid input. Please check your username and password.');
-              break;
             case 423:
               setErrorMsg('Account temporarily locked. Try again in 15 minutes.');
-              break;
-            case 429:
-              setErrorMsg('Too many login attempts. Please wait before trying again.');
               break;
             case 500:
               setErrorMsg('Server error. Please try again later.');
               break;
             default:
-              setErrorMsg(`Something went wrong (${error.response.status}). Please try again.`);
+              setErrorMsg(`Error ${error.response.status}: ${JSON.stringify(error.response.data)}`);
           }
         }
       } else {
         console.error('Unexpected login error:', error);
-        setErrorMsg('Something went wrong. Please try again.');
+        setErrorMsg(`Unexpected error: ${String(error)}`);
       }
     } finally {
       setIsSubmitting(false);
@@ -113,14 +130,33 @@ export default function LoginPage() {
             <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="password">
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              disabled={isSubmitting}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500 transition-colors"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={isSubmitting}
+                className="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent disabled:bg-gray-100 disabled:text-gray-500 transition-colors"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                disabled={isSubmitting}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none disabled:opacity-50 transition-colors"
+              >
+                {showPassword ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center justify-between pt-2">
