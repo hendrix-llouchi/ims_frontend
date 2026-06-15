@@ -4,17 +4,19 @@ import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from './pages/auth/ResetPasswordPage';
 import ChangePasswordPage from './pages/auth/ChangePasswordPage';
 import WorkerLayout from './pages/worker/WorkerLayout';
-import MyOrdersPage from './pages/worker/MyOrdersPage';
+import WorkerDashboard from './pages/worker/WorkerDashboard';
 import AllOrdersPage from './pages/worker/AllOrdersPage';
 import StockPage from './pages/worker/StockPage';
 import ProfilePage from './pages/worker/ProfilePage';
 import ManagerDashboard from './pages/manager/ManagerDashboard';
 import OwnerDashboard from './pages/owner/OwnerDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import Toast from './components/Toast';
 
 export default function App() {
   return (
     <BrowserRouter>
+      <Toast />
       <Routes>
         {/* Public */}
         <Route path="/login" element={<LoginPage />} />
@@ -46,7 +48,7 @@ export default function App() {
           {/* /worker  →  /worker/my-orders (absolute to avoid relative-path glitches) */}
           <Route index element={<Navigate to="/worker/my-orders" replace />} />
 
-          <Route path="my-orders"  element={<MyOrdersPage />} />
+          <Route path="my-orders"  element={<WorkerDashboard />} />
           <Route path="all-orders" element={<AllOrdersPage />} />
           <Route path="stock"      element={<StockPage />} />
           <Route path="profile"    element={<ProfilePage />} />
