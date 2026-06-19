@@ -156,6 +156,53 @@ export async function fetchProducts(
   return res.data;
 }
 
+/** POST /api/manager/products — create a new product */
+export async function createProduct(data: {
+  name: string;
+  type: string;
+  description: string | null;
+  unit: string;
+  warehouse_id: number;
+  max_stock_level: number;
+  current_stock: number;
+}): Promise<{ message: string; product: WorkerProduct }> {
+  const res = await axiosInstance.post<{ message: string; product: WorkerProduct }>(
+    '/api/manager/products',
+    data,
+  );
+  return res.data;
+}
+
+/** GET /api/manager/products/{id} — get details of a single product */
+export async function fetchProductDetails(
+  id: number,
+): Promise<{ product: WorkerProduct }> {
+  const res = await axiosInstance.get<{ product: WorkerProduct }>(
+    `/api/manager/products/${id}`,
+  );
+  return res.data;
+}
+
+/** PATCH /api/manager/products/{id} — update product */
+export async function updateProduct(
+  id: number,
+  data: {
+    name?: string;
+    type?: string;
+    description?: string | null;
+    unit?: string;
+    warehouse_id?: number;
+    max_stock_level?: number;
+    current_stock?: number;
+  },
+): Promise<{ message: string; product: WorkerProduct }> {
+  const res = await axiosInstance.patch<{ message: string; product: WorkerProduct }>(
+    `/api/manager/products/${id}`,
+    data,
+  );
+  return res.data;
+}
+
 // ── Stock ─────────────────────────────────────────────────────────────────────
 
 /** GET /api/manager/stock — paginated stock list */
