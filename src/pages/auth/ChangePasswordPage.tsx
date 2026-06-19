@@ -4,6 +4,7 @@ import { AxiosError } from 'axios';
 import axiosInstance from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import type { ChangePasswordPayload } from '../../types/auth';
+import PasswordRequirements, { isPasswordValid } from '../../components/PasswordRequirements';
 
 export default function ChangePasswordPage() {
   const [newPassword, setNewPassword] = useState('');
@@ -22,8 +23,8 @@ export default function ChangePasswordPage() {
       setFieldError('New password is required.');
       return false;
     }
-    if (newPassword.length < 6) {
-      setFieldError('Password must be at least 6 characters.');
+    if (!isPasswordValid(newPassword)) {
+      setFieldError('Password does not meet all requirements.');
       return false;
     }
     setFieldError('');
@@ -166,6 +167,7 @@ export default function ChangePasswordPage() {
                 {fieldError}
               </p>
             )}
+            <PasswordRequirements password={newPassword} />
           </div>
 
           {/* Submit */}

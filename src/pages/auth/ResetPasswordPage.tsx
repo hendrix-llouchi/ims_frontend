@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
 import type { ResetPasswordRequest } from '../../types/auth';
 import { AxiosError } from 'axios';
+import PasswordRequirements, { isPasswordValid } from '../../components/PasswordRequirements';
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -27,6 +28,11 @@ export default function ResetPasswordPage() {
       return;
     }
 
+    if (!isPasswordValid(password)) {
+      setErrorMsg('Password does not meet all requirements.');
+      return;
+    }
+
     if (password !== passwordConfirmation) {
       setErrorMsg('Passwords do not match.');
       return;
@@ -42,8 +48,7 @@ export default function ResetPasswordPage() {
     try {
       const payload: ResetPasswordRequest = {
         token,
-        password,
-        password_confirmation: passwordConfirmation,
+        new_password: password,
       };
       await axiosInstance.post('/api/auth/reset-password', payload);
       setIsSuccess(true);
@@ -130,6 +135,7 @@ export default function ResetPasswordPage() {
                     )}
                   </button>
                 </div>
+                <PasswordRequirements password={password} />
               </div>
 
               <div>
