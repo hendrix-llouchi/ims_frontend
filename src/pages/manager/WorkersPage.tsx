@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useNotificationStore } from '../../store/notificationStore';
 import {
   fetchManagerWorkers,
@@ -36,6 +37,7 @@ function getAvatarColor(name: string) {
 }
 
 export default function WorkersPage() {
+  const navigate = useNavigate();
   const { addNotification } = useNotificationStore();
 
   // Workers state
@@ -153,6 +155,12 @@ export default function WorkersPage() {
             Manage warehouse personnel availability, profiles, and flags.
           </p>
         </div>
+        <button
+          onClick={() => navigate('/manager/create-worker')}
+          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-indigo-700 transition-all cursor-pointer"
+        >
+          <span>➕ Create Worker</span>
+        </button>
       </div>
 
       {/* Main Content */}

@@ -97,6 +97,29 @@ export async function fetchManagerWorkers(
   return res.data;
 }
 
+/** POST /api/manager/users/create — create a new worker account */
+export async function createWorkerAccount(data: {
+  name: string;
+  age: number;
+  phone_number: string;
+  location: string;
+  emergency_contact: string;
+  email: string;
+  username: string;
+  role: 'worker';
+}): Promise<{
+  message: string;
+  user: ManagerWorker;
+  temporary_password?: string;
+}> {
+  const res = await axiosInstance.post<{
+    message: string;
+    user: ManagerWorker;
+    temporary_password?: string;
+  }>('/api/manager/users/create', data);
+  return res.data;
+}
+
 /** POST /api/manager/flags — flag a worker */
 export async function flagWorker(
   workerId: number,
