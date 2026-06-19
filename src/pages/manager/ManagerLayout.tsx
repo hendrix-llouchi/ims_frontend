@@ -68,6 +68,25 @@ function StockIcon() {
   );
 }
 
+function ProductsIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l5-5c.94-.94.94-2.48 0-3.42L12 2Z" />
+      <path d="M7 7h.01" />
+    </svg>
+  );
+}
+
 function PurchaseOrdersIcon() {
   return (
     <svg
@@ -87,6 +106,32 @@ function PurchaseOrdersIcon() {
     </svg>
   );
 }
+
+function WarehousesIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
+      <path d="M9 22v-4h6v4" />
+      <path d="M8 6h.01" />
+      <path d="M16 6h.01" />
+      <path d="M8 10h.01" />
+      <path d="M16 10h.01" />
+      <path d="M8 14h.01" />
+      <path d="M16 14h.01" />
+    </svg>
+  );
+}
+
 
 // Custom flag icon
 function FlagsIcon() {
@@ -207,6 +252,8 @@ function CloseIcon() {
 const NAV_ITEMS = [
   { to: '/manager/orders', label: 'Orders', icon: OrdersIcon },
   { to: '/manager/workers', label: 'Workers', icon: WorkersIcon },
+  { to: '/manager/warehouses', label: 'Warehouses', icon: WarehousesIcon },
+  { to: '/manager/products', label: 'Products', icon: ProductsIcon },
   { to: '/manager/stock', label: 'Stock', icon: StockIcon },
   { to: '/manager/purchase-orders', label: 'Purchase Orders', icon: PurchaseOrdersIcon },
   { to: '/manager/flags', label: 'Flags', icon: FlagsIcon },

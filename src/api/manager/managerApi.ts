@@ -97,6 +97,29 @@ export async function fetchManagerWorkers(
   return res.data;
 }
 
+/** POST /api/manager/users/create — create a new worker account */
+export async function createWorkerAccount(data: {
+  name: string;
+  age: number;
+  phone_number: string;
+  location: string;
+  emergency_contact: string;
+  email: string;
+  username: string;
+  role: 'worker';
+}): Promise<{
+  message: string;
+  user: ManagerWorker;
+  temporary_password?: string;
+}> {
+  const res = await axiosInstance.post<{
+    message: string;
+    user: ManagerWorker;
+    temporary_password?: string;
+  }>('/api/manager/users/create', data);
+  return res.data;
+}
+
 /** POST /api/manager/flags — flag a worker */
 export async function flagWorker(
   workerId: number,
@@ -129,6 +152,53 @@ export async function fetchProducts(
   const res = await axiosInstance.get<Paginated<WorkerProduct>>(
     '/api/manager/products',
     { params: { page } },
+  );
+  return res.data;
+}
+
+/** POST /api/manager/products — create a new product */
+export async function createProduct(data: {
+  name: string;
+  type: string;
+  description: string | null;
+  unit: string;
+  warehouse_id: number;
+  max_stock_level: number;
+  current_stock: number;
+}): Promise<{ message: string; product: WorkerProduct }> {
+  const res = await axiosInstance.post<{ message: string; product: WorkerProduct }>(
+    '/api/manager/products',
+    data,
+  );
+  return res.data;
+}
+
+/** GET /api/manager/products/{id} — get details of a single product */
+export async function fetchProductDetails(
+  id: number,
+): Promise<{ product: WorkerProduct }> {
+  const res = await axiosInstance.get<{ product: WorkerProduct }>(
+    `/api/manager/products/${id}`,
+  );
+  return res.data;
+}
+
+/** PATCH /api/manager/products/{id} — update product */
+export async function updateProduct(
+  id: number,
+  data: {
+    name?: string;
+    type?: string;
+    description?: string | null;
+    unit?: string;
+    warehouse_id?: number;
+    max_stock_level?: number;
+    current_stock?: number;
+  },
+): Promise<{ message: string; product: WorkerProduct }> {
+  const res = await axiosInstance.patch<{ message: string; product: WorkerProduct }>(
+    `/api/manager/products/${id}`,
+    data,
   );
   return res.data;
 }
@@ -257,4 +327,52 @@ export async function fetchSharedProducts(
   return res.data;
 }
 
+// ── Warehouses ────────────────────────────────────────────────────────────────
 
+/** GET /api/manager/warehouses — paginated list of warehouses */
+export async function fetchManagerWarehouses(
+  page = 1,
+): Promise<Paginated<WorkerProductWarehouse>> {
+  const res = await axiosInstance.get<Paginated<WorkerProductWarehouse>>(
+    '/api/manager/warehouses',
+    { params: { page } },
+  );
+  return res.data;
+}
+
+/** POST /api/manager/warehouses — create new warehouse */
+export async function createWarehouse(data: {
+  name: string;
+  location: string;
+}): Promise<{ message: string; warehouse: WorkerProductWarehouse }> {
+  const res = await axiosInstance.post<{
+    message: string;
+    warehouse: WorkerProductWarehouse;
+  }>('/api/manager/warehouses', data);
+  return res.data;
+}
+
+/** GET /api/manager/warehouses/{id} — get single warehouse details */
+export async function fetchWarehouseDetails(
+  id: number,
+): Promise<{ warehouse: WorkerProductWarehouse }> {
+  const res = await axiosInstance.get<{ warehouse: WorkerProductWarehouse }>(
+    `/api/manager/warehouses/${id}`,
+  );
+  return res.data;
+}
+
+/** PATCH /api/manager/warehouses/{id} — update warehouse */
+export async function updateWarehouse(
+  id: number,
+  data: {
+    name?: string;
+    location?: string;
+  },
+): Promise<{ message: string; warehouse: WorkerProductWarehouse }> {
+  const res = await axiosInstance.patch<{
+    message: string;
+    warehouse: WorkerProductWarehouse;
+  }>(`/api/manager/warehouses/${id}`, data);
+  return res.data;
+}

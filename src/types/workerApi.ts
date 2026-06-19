@@ -50,6 +50,7 @@ export interface WorkerProductWarehouse {
   id: number;
   name: string;
   location: string;
+  products_count?: number;
 }
 
 export interface WorkerProduct {
