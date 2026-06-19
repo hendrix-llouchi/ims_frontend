@@ -16,6 +16,7 @@ import ManagerStockPage from './pages/manager/StockPage';
 import PurchaseOrdersPage from './pages/manager/PurchaseOrdersPage';
 import FlagsPage from './pages/manager/FlagsPage';
 import CreateWorkerPage from './pages/manager/CreateWorkerPage';
+import WarehousesPage from './pages/manager/WarehousesPage';
 import OwnerDashboard from './pages/owner/OwnerDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Toast from './components/Toast';
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="orders" element={<OrdersPage />} />
           <Route path="workers" element={<WorkersPage />} />
           <Route path="create-worker" element={<CreateWorkerPage />} />
+          <Route path="warehouses" element={<WarehousesPage />} />
           <Route path="stock" element={<ManagerStockPage />} />
           <Route path="purchase-orders" element={<PurchaseOrdersPage />} />
           <Route path="flags" element={<FlagsPage />} />

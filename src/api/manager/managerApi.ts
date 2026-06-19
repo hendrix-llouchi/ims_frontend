@@ -280,4 +280,52 @@ export async function fetchSharedProducts(
   return res.data;
 }
 
+// ── Warehouses ────────────────────────────────────────────────────────────────
 
+/** GET /api/manager/warehouses — paginated list of warehouses */
+export async function fetchManagerWarehouses(
+  page = 1,
+): Promise<Paginated<WorkerProductWarehouse>> {
+  const res = await axiosInstance.get<Paginated<WorkerProductWarehouse>>(
+    '/api/manager/warehouses',
+    { params: { page } },
+  );
+  return res.data;
+}
+
+/** POST /api/manager/warehouses — create new warehouse */
+export async function createWarehouse(data: {
+  name: string;
+  location: string;
+}): Promise<{ message: string; warehouse: WorkerProductWarehouse }> {
+  const res = await axiosInstance.post<{
+    message: string;
+    warehouse: WorkerProductWarehouse;
+  }>('/api/manager/warehouses', data);
+  return res.data;
+}
+
+/** GET /api/manager/warehouses/{id} — get single warehouse details */
+export async function fetchWarehouseDetails(
+  id: number,
+): Promise<{ warehouse: WorkerProductWarehouse }> {
+  const res = await axiosInstance.get<{ warehouse: WorkerProductWarehouse }>(
+    `/api/manager/warehouses/${id}`,
+  );
+  return res.data;
+}
+
+/** PATCH /api/manager/warehouses/{id} — update warehouse */
+export async function updateWarehouse(
+  id: number,
+  data: {
+    name?: string;
+    location?: string;
+  },
+): Promise<{ message: string; warehouse: WorkerProductWarehouse }> {
+  const res = await axiosInstance.patch<{
+    message: string;
+    warehouse: WorkerProductWarehouse;
+  }>(`/api/manager/warehouses/${id}`, data);
+  return res.data;
+}
