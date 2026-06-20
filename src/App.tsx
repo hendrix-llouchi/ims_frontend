@@ -18,7 +18,8 @@ import FlagsPage from './pages/manager/FlagsPage';
 import CreateWorkerPage from './pages/manager/CreateWorkerPage';
 import WarehousesPage from './pages/manager/WarehousesPage';
 import ProductsPage from './pages/manager/ProductsPage';
-import OwnerDashboard from './pages/owner/OwnerDashboard';
+import OwnerLayout from './pages/owner/OwnerLayout';
+import UserManagementPage from './pages/owner/UserManagementPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Toast from './components/Toast';
 
@@ -89,13 +90,17 @@ export default function App() {
 
         {/* Protected — Owner */}
         <Route
-          path="/owner/dashboard"
+          path="/owner"
           element={
             <ProtectedRoute requiredRole="owner">
-              <OwnerDashboard />
+              <OwnerLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<Navigate to="/owner/users" replace />} />
+          <Route path="dashboard" element={<Navigate to="/owner/users" replace />} />
+          <Route path="users" element={<UserManagementPage />} />
+        </Route>
 
         {/* Root → login */}
         <Route path="/" element={<Navigate to="/login" replace />} />

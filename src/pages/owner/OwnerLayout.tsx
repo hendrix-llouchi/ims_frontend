@@ -4,30 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../api/axios';
 
 // ─── SVG Icons ─────────────────────────────────────────────────────────────────
-function OrdersIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-      <path d="M12 11h4" />
-      <path d="M12 16h4" />
-      <path d="M8 11h.01" />
-      <path d="M8 16h.01" />
-    </svg>
-  );
-}
-
-function WorkersIcon() {
+function UsersIcon() {
   return (
     <svg
       width="18"
@@ -44,111 +21,6 @@ function WorkersIcon() {
       <circle cx="9" cy="7" r="4" />
       <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  );
-}
-
-function StockIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-      <path d="m3.3 7 8.7 5 8.7-5" />
-      <path d="M12 22V12" />
-    </svg>
-  );
-}
-
-function ProductsIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l5-5c.94-.94.94-2.48 0-3.42L12 2Z" />
-      <path d="M7 7h.01" />
-    </svg>
-  );
-}
-
-function PurchaseOrdersIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="8" cy="21" r="1" />
-      <circle cx="19" cy="21" r="1" />
-      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-    </svg>
-  );
-}
-
-function WarehousesIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect width="16" height="20" x="4" y="2" rx="2" ry="2" />
-      <path d="M9 22v-4h6v4" />
-      <path d="M8 6h.01" />
-      <path d="M16 6h.01" />
-      <path d="M8 10h.01" />
-      <path d="M16 10h.01" />
-      <path d="M8 14h.01" />
-      <path d="M16 14h.01" />
-    </svg>
-  );
-}
-
-
-// Custom flag icon
-function FlagsIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-      <line x1="4" x2="4" y1="22" y2="15" />
     </svg>
   );
 }
@@ -250,16 +122,10 @@ function CloseIcon() {
 
 // ─── Sidebar Nav Items ─────────────────────────────────────────────────────────
 const NAV_ITEMS = [
-  { to: '/manager/orders', label: 'Orders', icon: OrdersIcon },
-  { to: '/manager/workers', label: 'Workers', icon: WorkersIcon },
-  { to: '/manager/warehouses', label: 'Warehouses', icon: WarehousesIcon },
-  { to: '/manager/products', label: 'Products', icon: ProductsIcon },
-  { to: '/manager/stock', label: 'Stock', icon: StockIcon },
-  { to: '/manager/purchase-orders', label: 'Purchase Orders', icon: PurchaseOrdersIcon },
-  { to: '/manager/flags', label: 'Flags', icon: FlagsIcon },
+  { to: '/owner/users', label: 'User Management', icon: UsersIcon },
 ];
 
-export default function ManagerLayout() {
+export default function OwnerLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -288,7 +154,7 @@ export default function ManagerLayout() {
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
       {/* ─── Mobile Header Bar (Sticky) ────────────────────────────────────────── */}
       <header className="md:hidden flex items-center justify-between px-4 h-14 bg-white border-b border-gray-200 sticky top-0 z-20 shadow-xs">
-        <NavLink to="/manager/orders" className="flex items-center gap-2 select-none">
+        <NavLink to="/owner/users" className="flex items-center gap-2 select-none">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600 text-white font-extrabold text-xs">
             I
           </span>
@@ -317,9 +183,7 @@ export default function ManagerLayout() {
       <aside
         className={[
           'fixed inset-y-0 left-0 flex flex-col justify-between bg-white border-r border-gray-200/80 z-40 transition-all duration-300 ease-in-out',
-          // Desktop collapsible width, mobile fixed width
           collapsed ? 'md:w-16 w-60' : 'w-60',
-          // Mobile slide-in overlay transition
           mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
         ].join(' ')}
       >
@@ -334,7 +198,7 @@ export default function ManagerLayout() {
           >
             {/* Desktop Brand Logo */}
             <NavLink
-              to="/manager/orders"
+              to="/owner/users"
               className={[
                 'items-center gap-2.5 select-none shrink-0 group',
                 collapsed ? 'md:hidden flex' : 'flex',
@@ -409,7 +273,6 @@ export default function ManagerLayout() {
                     <span
                       className={[
                         'transition-all duration-300 ease-in-out truncate whitespace-nowrap overflow-hidden',
-                        // Smoothly expand/collapse text on desktop, always visible on mobile
                         collapsed
                           ? 'md:max-w-0 md:opacity-0 md:pointer-events-none max-w-[200px] opacity-100'
                           : 'max-w-[200px] opacity-100',
@@ -434,7 +297,7 @@ export default function ManagerLayout() {
             ].join(' ')}
           >
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-50 border border-indigo-100/50 text-indigo-700 text-sm font-bold uppercase shadow-xs">
-              {(user?.name || user?.username || 'M').charAt(0)}
+              {(user?.name || user?.username || 'O').charAt(0)}
             </span>
             <div
               className={[
@@ -445,17 +308,17 @@ export default function ManagerLayout() {
               ].join(' ')}
             >
               <span className="block text-sm font-bold text-gray-900 truncate">
-                {user?.name || user?.username || 'Manager'}
+                {user?.name || user?.username || 'Owner'}
               </span>
               <span className="block text-xs font-semibold text-indigo-600/90 uppercase tracking-wider mt-0.5">
-                {user?.role || 'Manager'}
+                {user?.role || 'Owner'}
               </span>
             </div>
           </div>
 
           {/* Logout Button */}
           <button
-            id="manager-logout-btn"
+            id="owner-logout-btn"
             onClick={handleLogout}
             disabled={loggingOut}
             className={[
@@ -483,7 +346,6 @@ export default function ManagerLayout() {
       <div
         className={[
           'flex-1 min-h-screen flex flex-col transition-all duration-300 ease-in-out',
-          // Desktop margins dynamically shift to match collapsible sidebar width; mobile is flush
           collapsed ? 'md:pl-16 pl-0' : 'md:pl-60 pl-0',
         ].join(' ')}
       >
