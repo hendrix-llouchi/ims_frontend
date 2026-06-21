@@ -1,5 +1,5 @@
 import axiosInstance from '../axios';
-import type { Paginated } from '../../types/workerApi';
+import type { Paginated, ManagerFlag } from '../../types/workerApi';
 import type {
   OwnerUser,
   OwnerUserCreateInput,
@@ -108,3 +108,36 @@ export async function deleteOwnerUser(
   );
   return res.data;
 }
+
+/** GET /api/owner/flags — paginated list of pending worker flags */
+export async function fetchOwnerFlags(
+  page = 1
+): Promise<Paginated<ManagerFlag>> {
+  const res = await axiosInstance.get<Paginated<ManagerFlag>>('/api/owner/flags', {
+    params: { page },
+  });
+  return res.data;
+}
+
+/** PUT /api/owner/flags/{id}/dismiss — dismiss worker flag */
+export async function dismissOwnerFlag(
+  id: number
+): Promise<{ message: string }> {
+  const res = await axiosInstance.put<{ message: string }>(
+    `/api/owner/flags/${id}/dismiss`
+  );
+  return res.data;
+}
+
+/** PUT /api/owner/flags/{id}/warn — issue a formal warning for flag */
+export async function warnOwnerFlag(
+  id: number,
+  notes: string
+): Promise<{ message: string }> {
+  const res = await axiosInstance.put<{ message: string }>(
+    `/api/owner/flags/${id}/warn`,
+    { notes }
+  );
+  return res.data;
+}
+

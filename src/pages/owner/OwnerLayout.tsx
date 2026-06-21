@@ -120,9 +120,29 @@ function CloseIcon() {
   );
 }
 
+function FlagsIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+      <line x1="4" x2="4" y1="22" y2="15" />
+    </svg>
+  );
+}
+
 // ─── Sidebar Nav Items ─────────────────────────────────────────────────────────
 const NAV_ITEMS = [
   { to: '/owner/users', label: 'User Management', icon: UsersIcon },
+  { to: '/owner/worker-flags', label: 'Worker Flags', icon: FlagsIcon },
 ];
 
 export default function OwnerLayout() {
