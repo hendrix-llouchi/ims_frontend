@@ -4,6 +4,7 @@ import type {
   OwnerUser,
   OwnerUserCreateInput,
   OwnerUserUpdateInput,
+  OwnerProduct,
 } from '../../types/ownerApi';
 
 export interface FetchUsersParams {
@@ -138,6 +139,29 @@ export async function warnOwnerFlag(
     `/api/owner/flags/${id}/warn`,
     { notes }
   );
+  return res.data;
+}
+
+export interface FetchStockParams {
+  page?: number;
+  search?: string;
+  warehouse_id?: string | number;
+}
+
+/** GET /api/owner/stock — paginated list of all products with stock levels */
+export async function fetchOwnerStock(
+  params: FetchStockParams = {}
+): Promise<Paginated<OwnerProduct>> {
+  const queryParams: Record<string, string | number> = {};
+  if (params.page) queryParams.page = params.page;
+  if (params.search) queryParams.search = params.search;
+  if (params.warehouse_id && params.warehouse_id !== 'all') {
+    queryParams.warehouse_id = params.warehouse_id;
+  }
+
+  const res = await axiosInstance.get<Paginated<OwnerProduct>>('/api/owner/stock', {
+    params: queryParams,
+  });
   return res.data;
 }
 

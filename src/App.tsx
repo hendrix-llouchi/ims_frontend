@@ -21,6 +21,7 @@ import ProductsPage from './pages/manager/ProductsPage';
 import OwnerLayout from './pages/owner/OwnerLayout';
 import UserManagementPage from './pages/owner/UserManagementPage';
 import WorkerFlagsPage from './pages/owner/WorkerFlagsPage';
+import StockOverviewPage from './pages/owner/StockOverviewPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Toast from './components/Toast';
 
@@ -102,6 +103,7 @@ export default function App() {
           <Route path="dashboard" element={<Navigate to="/owner/users" replace />} />
           <Route path="users" element={<UserManagementPage />} />
           <Route path="worker-flags" element={<WorkerFlagsPage />} />
+          <Route path="stock" element={<StockOverviewPage />} />
         </Route>
 
         {/* Root → login */}
