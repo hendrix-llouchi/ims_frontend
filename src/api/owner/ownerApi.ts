@@ -5,6 +5,7 @@ import type {
   OwnerUserCreateInput,
   OwnerUserUpdateInput,
   OwnerProduct,
+  OwnerOrder,
 } from '../../types/ownerApi';
 
 export interface FetchUsersParams {
@@ -165,3 +166,25 @@ export async function fetchOwnerStock(
   return res.data;
 }
 
+export interface FetchOrdersParams {
+  page?: number;
+  search?: string;
+  status?: string;
+}
+
+/** GET /api/owner/orders — paginated list of all orders */
+export async function fetchOwnerOrders(
+  params: FetchOrdersParams = {}
+): Promise<Paginated<OwnerOrder>> {
+  const queryParams: Record<string, string | number> = {};
+  if (params.page) queryParams.page = params.page;
+  if (params.search) queryParams.search = params.search;
+  if (params.status && params.status !== 'all') {
+    queryParams.status = params.status;
+  }
+
+  const res = await axiosInstance.get<Paginated<OwnerOrder>>('/api/owner/orders', {
+    params: queryParams,
+  });
+  return res.data;
+}

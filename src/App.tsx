@@ -22,6 +22,7 @@ import OwnerLayout from './pages/owner/OwnerLayout';
 import UserManagementPage from './pages/owner/UserManagementPage';
 import WorkerFlagsPage from './pages/owner/WorkerFlagsPage';
 import StockOverviewPage from './pages/owner/StockOverviewPage';
+import OrdersOverviewPage from './pages/owner/OrdersOverviewPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import Toast from './components/Toast';
 
@@ -104,6 +105,7 @@ export default function App() {
           <Route path="users" element={<UserManagementPage />} />
           <Route path="worker-flags" element={<WorkerFlagsPage />} />
           <Route path="stock" element={<StockOverviewPage />} />
+          <Route path="orders" element={<OrdersOverviewPage />} />
         </Route>
 
         {/* Root → login */}
